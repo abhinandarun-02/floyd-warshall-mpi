@@ -10,11 +10,11 @@ def read_matrix(localmat, n, myrank, p, comm):
             [0, 7, 9, INFINITY, 0, 7, 9, INFINITY],
             [7, 0, 10, 15, 7, 0, 10, 15],
             [9, 10, 0, 11, 9, 10, 0, 11],
-            [14, INFINITY, 2, INFINITY, 14, INFINITY, 2, INFINITY],
-            [0, 7, 9, INFINITY, 0, 7, 9, INFINITY],
-            [7, 0, 10, 15, 7, 0, 10, 15],
-            [9, 10, 0, 11, 9, 10, 0, 11],
-            [14, INFINITY, 2, INFINITY, 14, INFINITY, 2, INFINITY]
+            [14, INFINITY, 2, 0, 14, INFINITY, 2, INFINITY],
+            [12, 7, 9, INFINITY, 0, 7, 9, INFINITY],
+            [7, 12, 10, 15, 7, 0, 10, 15],
+            [9, 10, 22, 11, 9, 10, 0, 11],
+            [14, INFINITY, 2, INFINITY, 14, INFINITY, 2, 0]
         ])
     else:
         tempmat = None
@@ -24,8 +24,6 @@ def read_matrix(localmat, n, myrank, p, comm):
         tempmat = None
 
 def print_matrix(localmat, n, myrank, p, comm):
-    
-
     if myrank == 0:
         tempmat = np.zeros((n, n), dtype=int)
     else:
@@ -68,13 +66,15 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     p = comm.Get_size()
     myrank = comm.Get_rank()
-    print("total cores: ", p)
 
- 
-    n = 8
+    n = 8 
+
+    if myrank == 0:
+        n = 8
 
 
     n = comm.bcast(n, root=0)
+
     localmat = np.zeros(n * n // p, dtype=int)
 
     read_matrix(localmat, n, myrank, p, comm)
@@ -83,11 +83,10 @@ if __name__ == "__main__":
         print("We got:")
     print_matrix(localmat, n, myrank, p, comm)
 
-    floyd(localmat, n, myrank, p, comm)
-
+    for i in range(8):
+        floyd(localmat, n, myrank, p, comm)
+    
     print()
-
-    floyd(localmat, n, myrank, p, comm)
 
     if myrank == 0:
         print("The solution is:")
