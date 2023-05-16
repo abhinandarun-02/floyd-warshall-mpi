@@ -5,6 +5,12 @@ INFINITY = 1000000
 
 def read_matrix(localmat, n, myrank, p, comm):
     if myrank == 0:
+        # tempmat = np.zeros((n, n), dtype=int)
+        # print("Enter the local matrix:")
+        # for i in range(n):
+        #     for j in range(n):
+        #         tempmat[i, j] = int(input())
+
         # Hardcoded matrix values for 6 vertices
         tempmat = np.array([
             [0, 7, 9, INFINITY, 0, 7, 9, INFINITY],
@@ -67,9 +73,11 @@ if __name__ == "__main__":
     p = comm.Get_size()
     myrank = comm.Get_rank()
 
-    n = 8 
-
+    # no of vertices
+    n = None
     if myrank == 0:
+        # print("How many vertices:")
+        # n = int(input())
         n = 8
 
 
