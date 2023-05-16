@@ -5,11 +5,17 @@ INFINITY = 1000000
 
 def read_matrix(localmat, n, myrank, p, comm):
     if myrank == 0:
-        tempmat = np.zeros((n, n), dtype=int)
-        print("Enter the local matrix:")
-        for i in range(n):
-            for j in range(n):
-                tempmat[i, j] = int(input())
+        # Hardcoded matrix values for 6 vertices
+        tempmat = np.array([
+            [0, 7, 9, INFINITY, 0, 7, 9, INFINITY],
+            [7, 0, 10, 15, 7, 0, 10, 15],
+            [9, 10, 0, 11, 9, 10, 0, 11],
+            [14, INFINITY, 2, INFINITY, 14, INFINITY, 2, INFINITY],
+            [0, 7, 9, INFINITY, 0, 7, 9, INFINITY],
+            [7, 0, 10, 15, 7, 0, 10, 15],
+            [9, 10, 0, 11, 9, 10, 0, 11],
+            [14, INFINITY, 2, INFINITY, 14, INFINITY, 2, INFINITY]
+        ])
     else:
         tempmat = None
     
@@ -18,6 +24,8 @@ def read_matrix(localmat, n, myrank, p, comm):
         tempmat = None
 
 def print_matrix(localmat, n, myrank, p, comm):
+    
+
     if myrank == 0:
         tempmat = np.zeros((n, n), dtype=int)
     else:
@@ -60,10 +68,10 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     p = comm.Get_size()
     myrank = comm.Get_rank()
+    print("total cores: ", p)
 
-    if myrank == 0:
-        print("How many vertices:")
-        n = int(input())
+ 
+    n = 8
 
 
     n = comm.bcast(n, root=0)
